@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using stock_fincance_api.Data;
+using stock_fincance_api.Mappers;
 
 namespace stock_fincance_api.Controllers
 {
@@ -17,20 +18,21 @@ namespace stock_fincance_api.Controllers
         [HttpGet]
         public IActionResult GetAll()
         {
-            var stocks = _context.Stocks.ToList();
+            var stocks = _context.Stocks.ToList()
+                 .Select(s => s.ToStockDto()); 
+             
             return Ok(stocks);
         }
+
         [HttpGet("{id}")]
         public IActionResult GetById([FromRoute] int id)
         {
-            var stocks = _context.Stocks.Find(id);
-            if (stocks == null)
+            var stock = _context.Stocks.Find(id);
+            if (stock == null)
             {
                 return NotFound();
             }
-            return Ok(stocks);
-
-
+            return Ok(stock.ToStockDto());
         }
     }
 }
