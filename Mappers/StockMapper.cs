@@ -1,4 +1,5 @@
-﻿using stock_fincance_api.DTOs.Stocks;
+﻿using stock_fincance_api.DTOs;
+using stock_fincance_api.DTOs.Stocks;
 using stock_fincance_api.Models;
 
 namespace stock_fincance_api.Mappers
@@ -14,7 +15,20 @@ namespace stock_fincance_api.Mappers
                 CompanyName = stockModel.CompanyName,
                 Purchase = stockModel.Purchase,
                 lastDiv = stockModel.lastDiv,
-                MarketCap = stockModel.MarketCap,
+                MarketCap = stockModel.MarketCap
+
+            };
+        }
+        public static Stock ToStockFromCreateDto(this CreateStockRequestDto stockDto)
+        {
+            return new Stock
+            {
+                Symbol = stockDto.Symbol,
+                CompanyName = stockDto.CompanyName,
+                Purchase = stockDto.Purchase,
+                lastDiv = stockDto.LastDiv,
+                Industry = stockDto.Industry,
+                MarketCap = stockDto.MarketCap
 
             };
         }
