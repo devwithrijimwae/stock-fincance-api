@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Mvc;
 using stock_fincance_api.Data;
 using stock_fincance_api.DTOs;
 using stock_fincance_api.Mappers;
+using stock_fincance_api.Repositoy;
 using System.Data.Entity;
 using System.Runtime.InteropServices;
 
@@ -13,15 +14,17 @@ namespace stock_fincance_api.Controllers
     public class StockController : ControllerBase
     {
         private readonly ApplicationDbContext _context;
+        private readonly IStockRepository _stockRepo;
 
-        public StockController(ApplicationDbContext context)
+        public StockController(ApplicationDbContext context, IStockRepository stockRepo)
         {
+            _stockRepo = stockRepo;
             _context = context;
         }
         [HttpGet]
         public async Task <IActionResult> GetAll()
         {
-            var stocks = await _context.Stocks.ToListAsync();
+            var stocks = await _stockRepo.GetAllAsync();
                 var stockDto = stocks.Select(s => StockMapper.ToStockDto(s));
 
             return Ok(stocks);
@@ -80,7 +83,7 @@ namespace stock_fincance_api.Controllers
                 return NotFound();
             }
             _context.Stocks.Remove(stockModel1);
-           await  _context.SaveChangesAsync();
+            await _context.SaveChangesAsync();
             return NoContent();
 
         }

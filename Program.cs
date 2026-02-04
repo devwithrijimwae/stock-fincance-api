@@ -1,5 +1,7 @@
 using Microsoft.EntityFrameworkCore;
+using stock_fincance_api.Controllers.Repository;
 using stock_fincance_api.Data;
+using stock_fincance_api.Repositoy;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -13,6 +15,8 @@ builder.Services.AddSwaggerGen();
 builder.Services.AddDbContext<ApplicationDbContext>(options =>{
     options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection"));
 });
+
+builder.Services.AddScoped<IStockRepository, StockRepository>();
 
 var app = builder.Build();
 
