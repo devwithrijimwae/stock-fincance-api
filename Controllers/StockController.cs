@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Mvc;
 using stock_fincance_api.Data;
 using stock_fincance_api.DTOs;
+using stock_fincance_api.DTOs.Stocks;
 using stock_fincance_api.Mappers;
 using stock_fincance_api.Repositoy;
 using System.Data.Entity;
@@ -25,51 +26,45 @@ namespace stock_fincance_api.Controllers
         public async Task <IActionResult> GetAll()
         {
             var stocks = await _stockRepo.GetAllAsync();
-                var stockDto = stocks.Select(s => StockMapper.ToStockDto(s));
+            var stockDto = stocks.Select(s => s.ToStockDto()).ToList();
 
-            return Ok(stocks);
+            return Ok(stockDto);
         }
 
         [HttpGet("{id}")]
         public async Task <IActionResult> GetById([FromRoute] int id)
         {
-            var stock = await _context.Stocks.FindAsync(id);
+            var stock = await _stockRepo.GetByIdAsync(id);
             if (stock == null)
             {
                 return NotFound();
             }
-            return base.Ok(stock.ToStockDto());
+            return Ok(stock);
         }
 
         [HttpPost]
         public async Task <IActionResult> Create([FromBody] CreateStockRequestDto stockDto)
         {
-            var stockModel1 = stockDto.ToStockFromCreateDto();
-           await _context.Stocks.AddAsync(stockModel1);
+            var stockModel = stockDto.ToStockFromCreateDto();
+           await _stockRepo.CreateAsync(stockModel);
             await _context.SaveChangesAsync();
-            return CreatedAtAction(nameof(GetById), new { id = stockModel1.Id }, stockModel1.ToStockDto());
+            return CreatedAtAction(nameof(GetById), new { id = stockModel.Id }, stockModel.ToStockDto());
 
         }
         [HttpPut]
         [Route("{Id}")]
         public async Task <IActionResult> Update([FromRoute] int Id, [FromBody] UpdateStockRequestDto updateDto)
         {
-            var stockModel1 = await _context.Stocks.FirstOrDefaultAsync(x => x.Id == Id);
+            var stockModel = await _stockRepo.UpdateAsync(Id,updateDto);
 
-            if (stockModel1 == null)
+            if (stockModel == null)
             {
                 return NotFound();
             }
-            stockModel1.Symbol = updateDto.Symbol;
-            stockModel1.CompanyName = updateDto.CompanyName;
-            stockModel1.Purchase = updateDto.Purchase;
-            stockModel1.lastDiv = updateDto.LastDiv;
-            stockModel1.Industry = updateDto.Industry;
-            stockModel1.MarketCap = updateDto.MarketCap;
-
+           
             await _context.SaveChangesAsync();
 
-            return Ok(stockModel1.ToStockDto());
+            return Ok(stockModel.ToStockDto());
 
         }
         [HttpDelete]
@@ -77,14 +72,13 @@ namespace stock_fincance_api.Controllers
 
         public async Task <IActionResult> Delete([FromRoute] int Id)
         {
-            var stockModel1 = _context.Stocks.FirstOrDefault(x => x.Id == Id);
-            if (stockModel1 == null)
+            var stockModel = await _stockRepo.DeleteAsync(Id);
+    
+            if (stockModel == null)
             {
                 return NotFound();
             }
-            _context.Stocks.Remove(stockModel1);
-            await _context.SaveChangesAsync();
-            return NoContent();
+                return NoContent();
 
         }
     }

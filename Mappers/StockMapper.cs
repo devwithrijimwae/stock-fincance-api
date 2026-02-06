@@ -14,7 +14,7 @@ namespace stock_fincance_api.Mappers
                 Symbol = stockModel.Symbol,
                 CompanyName = stockModel.CompanyName,
                 Purchase = stockModel.Purchase,
-                lastDiv = stockModel.lastDiv,
+                lastDiv = stockModel.LastDiv,
                 MarketCap = stockModel.MarketCap
 
             };
@@ -26,7 +26,7 @@ namespace stock_fincance_api.Mappers
                 Symbol = stockDto.Symbol,
                 CompanyName = stockDto.CompanyName,
                 Purchase = stockDto.Purchase,
-                lastDiv = stockDto.LastDiv,
+                LastDiv = stockDto.LastDiv,
                 Industry = stockDto.Industry,
                 MarketCap = stockDto.MarketCap
 

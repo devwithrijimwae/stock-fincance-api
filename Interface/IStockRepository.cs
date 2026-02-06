@@ -6,10 +6,10 @@ namespace stock_fincance_api.Repositoy
     public interface IStockRepository
     {
         Task<List<Stock>> GetAllAsync();
-        Task<List<Stock>> GetByIdAsync();
+        Task<List<Stock>> GetByIdAsync(int id );
         Task<List<Stock>> CreateAsync(Stock stockModel);
         Task<Stock> UpdateAsync(int Id, UpdateStockRequestDto stockDto);
-        Task<Stock> DeleteAsync(int Id);
+        Task<Stock?> DeleteAsync(int Id);
 
 
     }
