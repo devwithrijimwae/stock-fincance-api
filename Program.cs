@@ -1,6 +1,7 @@
 using Microsoft.EntityFrameworkCore;
 using stock_fincance_api.Controllers.Repository;
 using stock_fincance_api.Data;
+using stock_fincance_api.Interface;
 using stock_fincance_api.Repositoy;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -17,6 +18,7 @@ builder.Services.AddDbContext<ApplicationDbContext>(options =>{
 });
 
 builder.Services.AddScoped<IStockRepository, StockRepository>();
+builder.Services.AddScoped<ICommentRepository, CommentRepository>();
 
 var app = builder.Build();
 

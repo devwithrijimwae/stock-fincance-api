@@ -2,11 +2,9 @@
 using Microsoft.AspNetCore.Mvc;
 using stock_fincance_api.Data;
 using stock_fincance_api.DTOs;
-using stock_fincance_api.DTOs.Stocks;
 using stock_fincance_api.Mappers;
 using stock_fincance_api.Repositoy;
-using System.Data.Entity;
-using System.Runtime.InteropServices;
+
 
 namespace stock_fincance_api.Controllers
 {
