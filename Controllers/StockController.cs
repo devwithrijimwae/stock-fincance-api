@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Mvc;
 using stock_fincance_api.Data;
 using stock_fincance_api.DTOs;
+using stock_fincance_api.Helper;
 using stock_fincance_api.Mappers;
 using stock_fincance_api.Repositoy;
 
@@ -21,17 +22,21 @@ namespace stock_fincance_api.Controllers
             _context = context;
         }
         [HttpGet]
-        public async Task <IActionResult> GetAll()
+        public async Task <IActionResult> GetAll([FromQuery] QueryObject query )
         {
-            var stocks = await _stockRepo.GetAllAsync();
-            var stockDto = stocks.Select(s => s.ToStockDto()).ToList();
+            if (!ModelState.IsValid)
+                return BadRequest(ModelState);
+            var stocks = await _stockRepo.GetAllAsync(query);
+            var stockDto = stocks.Select(s => s.ToStockDto());
 
             return Ok(stockDto);
         }
 
-        [HttpGet("{id}")]
+        [HttpGet("{id}: int")]
         public async Task <IActionResult> GetById([FromRoute] int id)
         {
+            if (!ModelState.IsValid)
+                return BadRequest(ModelState);
             var stock = await _stockRepo.GetByIdAsync(id);
             if (stock == null)
             {
@@ -50,9 +55,11 @@ namespace stock_fincance_api.Controllers
 
         }
         [HttpPut]
-        [Route("{Id}")]
+        [Route("{Id}:int")]
         public async Task <IActionResult> Update([FromRoute] int Id, [FromBody] UpdateStockRequestDto updateDto)
         {
+            if (!ModelState.IsValid)
+                return BadRequest(ModelState);
             var stockModel = await _stockRepo.UpdateAsync(Id,updateDto);
 
             if (stockModel == null)
@@ -66,10 +73,12 @@ namespace stock_fincance_api.Controllers
 
         }
         [HttpDelete]
-        [Route("{Id}")]
+        [Route("{Id}:int")]
 
         public async Task <IActionResult> Delete([FromRoute] int Id)
         {
+            if (!ModelState.IsValid)
+                return BadRequest(ModelState);
             var stockModel = await _stockRepo.DeleteAsync(Id);
     
             if (stockModel == null)

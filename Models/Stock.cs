@@ -6,7 +6,7 @@ namespace stock_fincance_api.Models
     public class Stock
     {
         public int Id { get; set; }
-        public string? Symbol { get; set; }
+        public string? symbol { get; set; }
         public string CompanyName { get; set; } = string.Empty;
         [Column(TypeName = "decimal(18,2)")]
         public decimal Purchase { get; set; }

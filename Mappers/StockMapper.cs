@@ -11,7 +11,7 @@ namespace stock_fincance_api.Mappers
             return new StockDto
             {
                 Id = stockModel.Id,
-                Symbol = stockModel.Symbol,
+                Symbol = stockModel.symbol,
                 CompanyName = stockModel.CompanyName,
                 Purchase = stockModel.Purchase,
                 lastDiv = stockModel.LastDiv,
@@ -24,7 +24,7 @@ namespace stock_fincance_api.Mappers
         {
             return new Stock
             {
-                Symbol = stockDto.Symbol,
+                symbol = stockDto.Symbol,
                 CompanyName = stockDto.CompanyName,
                 Purchase = stockDto.Purchase,
                 LastDiv = stockDto.LastDiv,

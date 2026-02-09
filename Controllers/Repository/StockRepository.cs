@@ -1,6 +1,7 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using stock_fincance_api.Data;
 using stock_fincance_api.DTOs;
+using stock_fincance_api.Helper;
 using stock_fincance_api.Models;
 using stock_fincance_api.Repositoy;
 
@@ -35,9 +36,19 @@ namespace stock_fincance_api.Controllers.Repository
             return stockModel;
         }
 
-        public async Task<List<Stock>> GetAllAsync()
+        public async Task<List<Stock>> GetAllAsync(QueryObject query)
         {
-            return await _context.Stocks.Include(c => c.Comments).ToListAsync();
+            var stocks = _context.Stocks.Include(c => c.Comments).AsQueryable();
+            if (!string.IsNullOrWhiteSpace(query.CompanyName))
+            {
+                stocks = stocks.Where(s => s.CompanyName.Contains(query.CompanyName));
+
+            }
+            if (!string.IsNullOrWhiteSpace(query.Symbol))
+            {
+                 stocks = stocks.Where(s => s.symbol.Contains(query.Symbol));
+            }
+            return await stocks.ToListAsync();
         }
 
         public async Task<Stock?> GetByIdAsync(int id)
@@ -58,7 +69,7 @@ namespace stock_fincance_api.Controllers.Repository
             {
                 return null;
             }
-            existingstock.Symbol = stockDto.Symbol;
+            existingstock.symbol = stockDto.Symbol;
             existingstock.CompanyName = stockDto.CompanyName;
             existingstock.Purchase = stockDto.Purchase;
             existingstock.LastDiv = stockDto.LastDiv;
