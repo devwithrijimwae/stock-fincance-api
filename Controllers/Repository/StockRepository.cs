@@ -10,6 +10,7 @@ namespace stock_fincance_api.Controllers.Repository
     public class StockRepository : IStockRepository
     {
         private readonly ApplicationDbContext _context;
+        private int skipNumber;
 
         public StockRepository(ApplicationDbContext context)
         {
@@ -48,7 +49,15 @@ namespace stock_fincance_api.Controllers.Repository
             {
                  stocks = stocks.Where(s => s.symbol.Contains(query.Symbol));
             }
-            return await stocks.ToListAsync();
+            if (!string.IsNullOrWhiteSpace(query.SortBy))
+            {
+                if (query.SortBy.Equals("Symbol",StringComparison.OrdinalIgnoreCase))
+                {
+                    stocks = query.IsDescending ? stocks.OrderByDescending(s => s.symbol) : stocks.OrderBy(s => s.symbol);
+                }
+                var skip = (query.PageNumber - 1) * query.PageSize;
+            }
+            return await stocks.Skip(skipNumber).Take(query.PageSize).ToListAsync();
         }
 
         public async Task<Stock?> GetByIdAsync(int id)
