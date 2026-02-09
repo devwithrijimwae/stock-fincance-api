@@ -33,8 +33,6 @@ namespace stock_fincance_api.Mappers
 
                 Title = commentDto.Title,
                 Content = commentDto.Content,
-   
-
             };
         }   
     }

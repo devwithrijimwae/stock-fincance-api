@@ -62,4 +62,16 @@ public class CommentsController : ControllerBase
         }
         return Ok(comment.ToCommentDto());
     }
+    [HttpDelete]
+    [Route("{id}")]
+    public async Task<IActionResult> Delete([FromRoute] int id)
+    {
+        var comment = await _commentRepo.DeleteAsync(id);
+        if (comment == null)
+        {
+            return NotFound("Comment does not exist");
+        }
+        return NoContent();
+    }
+
 }
