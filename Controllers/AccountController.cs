@@ -17,7 +17,34 @@ namespace stock_fincance_api.Controllers
             _userManager = userManager;
             _TokenService = tokenService;
         }
-        [HttpGet("register")]
+        [HttpPost("Longin")]
+        public async Task<IActionResult> Login([FromBody] LoginDto loginDto)
+        {
+            try
+            {
+                if (!ModelState.IsValid)
+                    return BadRequest(ModelState);
+                var user = await _userManager.FindByEmailAsync(loginDto.Email);
+                if (user == null)
+                    return Unauthorized("Invalid email or password.");
+                var passwordValid = await _userManager.CheckPasswordAsync(user, loginDto.Password);
+                if (!passwordValid)
+                    return Unauthorized("Invalid email or password.");
+                return Ok(new NewUserDto
+                {
+                    UserName = user.UserName,
+                    Email = user.Email,
+                    Token = _TokenService.CreateTokenService(user)
+                });
+            }
+            catch (Exception e)
+            {
+                return StatusCode(500, e);
+            }
+        }
+
+
+        [HttpPost("register")]
         public async Task<IActionResult> Register([FromBody] RegisterDto registerDto)
         {
             try
